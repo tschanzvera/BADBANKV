@@ -1,10 +1,13 @@
-function Balance(){
+function Balance({header,bgcolor,description,update}){
     const [show, setShow] = React.useState(true);
     const [status, setStatus] = React.useState("EUR");
    
     const [email, setEmail] = React.useState("");
     const [currency, setCurrency] = React.useState("");
-    const ctx = React.useContext(UserContext);  
+    const bankContext = React.useContext(BankContext);
+    const bankDispatchContext = React.useContext(BankDispatchContext);
+
+
  
  
    function validate(field, label){
@@ -19,7 +22,14 @@ function Balance(){
      console.log(email, currency);
      if (!validate(email,    'email'))    return;
      if (!validate(currency, 'currency')) return;
-     ctx.users.push({email,currency,balance:100});
+     bankDispatchContext({
+        type: update,
+        ammount,
+        currency
+        
+    })
+  //   ctx.users.push({email,currency,balance:100});
+
      setShow(false);
    }    
     function clearForm(){
@@ -30,10 +40,13 @@ function Balance(){
  
     return(
      <Card
-     bgcolor="secondary"
-     header="Balance"
+     header={header}
+     bgcolor={bgcolor}
+     update={update}
+     description={description}
      status={status}
-     body={show ?(      <>
+     body={show ?(   
+           <>
         
         Email<br/>
          <input type="input" className="form-control" id="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.currentTarget.value)}/><br/>

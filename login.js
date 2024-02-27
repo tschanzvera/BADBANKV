@@ -4,7 +4,7 @@ function Login(){
   
    const [email, setEmail] = React.useState("");
    const [password, setPassword] = React.useState("");
-   const ctx = React.useContext(UserContext);  
+  // const ctx = React.useContext(UserContext);  
 
 
   function validate(field, label){
@@ -19,7 +19,7 @@ function handleCreate(){
     console.log(email,password);
     if (!validate(email,    'email'))    return;
     if (!validate(password, 'password')) return;
-    ctx.users.push({email,password,balance:100});
+    //ctx.users.push({email,password,balance:100});
     setShow(false);
   }    
    function clearForm(){

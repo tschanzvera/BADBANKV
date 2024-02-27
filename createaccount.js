@@ -4,7 +4,10 @@ function CreateAccount(){
    const [name, setName] = React.useState("");
    const [email, setEmail] = React.useState("");
    const [password, setPassword] = React.useState("");
-   const ctx = React.useContext(UserContext);  
+   //const ctx = React.useContext(UserContext);  
+    const bankContext = React.useContext(BankContext);
+    const bankDispatchContext = React.useContext(BankDispatchContext);
+
 
 
   function validate(field, label){
@@ -20,7 +23,13 @@ function handleCreate(){
     if (!validate(name,     'name'))     return;
     if (!validate(email,    'email'))    return;
     if (!validate(password, 'password')) return;
-    ctx.users.push({name,email,password,balance:100});
+ //   ctx.users.push({name,email,password,balance:100});
+    bankDispatchContext({
+        type:ACTION_CREATE_ACCOUNT,
+        name,
+        email,
+        password
+    })
     setShow(false);
   }    
    function clearForm(){
