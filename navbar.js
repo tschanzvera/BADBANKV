@@ -1,4 +1,6 @@
 function Navbar(){
+    const bankContext = React.useContext(BankContext);
+
     return(
         <>
            <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,7 +24,10 @@ function Navbar(){
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#/alldata/">AllData</a>
-          </li>          
+          </li> 
+          <li className="nav-item">
+            {bankContext.currentAccount}
+          </li>             
         </ul>
       </div>
     </nav>

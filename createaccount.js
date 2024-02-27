@@ -26,9 +26,11 @@ function handleCreate(){
  //   ctx.users.push({name,email,password,balance:100});
     bankDispatchContext({
         type:ACTION_CREATE_ACCOUNT,
-        name,
-        email,
-        password
+        account:{
+            name,
+            email,
+            password
+        }
     })
     setShow(false);
   }    

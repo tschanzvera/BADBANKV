@@ -1,11 +1,13 @@
 function Balance({header,bgcolor,description,update}){
     const [show, setShow] = React.useState(true);
-    const [status, setStatus] = React.useState("EUR");
    
-    const [email, setEmail] = React.useState("");
-    const [currency, setCurrency] = React.useState("");
+   
+    const [amount, setAmount] = React.useState("");
+    const [currency, setCurrency] = React.useState("EUR");
     const bankContext = React.useContext(BankContext);
     const bankDispatchContext = React.useContext(BankDispatchContext);
+    const currentAccount = bankContext.accounts[bankContext.currentAccount];
+    const currentBalance = currentAccount.balance;
 
 
  
@@ -18,13 +20,12 @@ function Balance({header,bgcolor,description,update}){
      }
      return true;
  }
- function handleCreate(){
-     console.log(email, currency);
-     if (!validate(email,    'email'))    return;
+ function handle(){
+     if (!validate(amount,    'amount'))    return;
      if (!validate(currency, 'currency')) return;
      bankDispatchContext({
         type: update,
-        ammount,
+        amount,
         currency
         
     })
@@ -33,7 +34,7 @@ function Balance({header,bgcolor,description,update}){
      setShow(false);
    }    
     function clearForm(){
-      setEmail  ('');
+      setAmount  ('');
      setCurrency('');
      setShow(true);
    }
@@ -44,20 +45,30 @@ function Balance({header,bgcolor,description,update}){
      bgcolor={bgcolor}
      update={update}
      description={description}
-     status={status}
      body={show ?(   
            <>
-        
-        Email<br/>
-         <input type="input" className="form-control" id="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.currentTarget.value)}/><br/>
+        Balance: {currentBalance}<br/>
+        Amount<br/>
+         <input 
+            type="input" 
+            className="form-control" 
+            id="amount" 
+            placeholder="Enter amount" 
+            value={amount} 
+            onChange={e => setAmount(e.currentTarget.value)}/><br/>
         Choose currency<br/>
-        <select className="form-control" id="currency" placeholder="Enter currency" value={currency} onChange={e => setCurrency(e.currentTarget.value)}>
+        <select 
+            className="form-control" 
+            id="currency" 
+            placeholder="Enter currency" 
+            value={currency} 
+            onChange={e => setCurrency(e.currentTarget.value)}>
         <option value="USD">CHF</option>
         <option value="EUR">EUR</option>
         </select><br/>
 
         
-         <button type="submit" className="btn btn-light" onClick={handleCreate}>show current balance</button>
+         <button type="submit" className="btn btn-light" onClick={handle}>show current balance</button>
          </>
        ):(
          <>

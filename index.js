@@ -1,8 +1,9 @@
 function Spa(){
     return(
         <HashRouter>
-        <Navbar/>
+       
         <BankContextProvider>
+            <Navbar/>   
             <Route path="/" exact component ={Home}/>
             <Route path="/CreateAccount/"component ={CreateAccount}/>
             <Route path="/login/"component ={Login}/>
