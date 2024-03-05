@@ -8,12 +8,16 @@ function CreateAccount(){
     const bankContext = React.useContext(BankContext);
     const bankDispatchContext = React.useContext(BankDispatchContext);
 
+  function showError(error){
+    setStatus(error);
+    setTimeout(() => setStatus(''),3000);
 
+  }
 
   function validate(field, label){
     if (!field) {
-      setStatus('Error: ' + label);
-      setTimeout(() => setStatus(''),3000);
+      showError('Error: ' + label);
+     
       return false;
     }
     return true;
@@ -23,6 +27,10 @@ function handleCreate(){
     if (!validate(name,     'name'))     return;
     if (!validate(email,    'email'))    return;
     if (!validate(password, 'password')) return;
+    if (password.length < 8){
+      showError("password needs to be at least 8 characters")
+      return;
+    }
  //   ctx.users.push({name,email,password,balance:100});
     bankDispatchContext({
         type:ACTION_CREATE_ACCOUNT,

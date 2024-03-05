@@ -1,15 +1,22 @@
 function Balance({header,bgcolor,description,update}){
     const [show, setShow] = React.useState(true);
-   
-   
+    const [status, setStatus] = React.useState("");
     const [amount, setAmount] = React.useState("");
     const [currency, setCurrency] = React.useState("EUR");
     const bankContext = React.useContext(BankContext);
     const bankDispatchContext = React.useContext(BankDispatchContext);
     const currentAccount = bankContext.accounts[bankContext.currentAccount];
+   
+    if(!currentAccount){
+      return (<h4> you need to create an account or login</h4>)
+    }
     const currentBalance = currentAccount.balance;
 
-
+    function showError(error){
+      setStatus(error);
+      setTimeout(() => setStatus(''),3000);
+  
+    }
  
  
    function validate(field, label){
@@ -20,12 +27,33 @@ function Balance({header,bgcolor,description,update}){
      }
      return true;
  }
+//  const numericAmount = Number(field);
+//  if (isNaN(numericAmount)) {
+//    setStatus("Error: " + label + " must be a valid number");
+//    setTimeout(() => setStatus(""), 3000);
+//    return false;
+//  }
+
+//  return true;
+//}
  function handle(){
      if (!validate(amount,    'amount'))    return;
      if (!validate(currency, 'currency')) return;
+     const numericAmount = Number(amount);
+     if (isNaN(numericAmount)) {
+       showError("Error: Amount must be a valid number");
+       return;
+     }
+     if(update === ACTION_WITHDRAW){
+      if( currentBalance < Number(amount)){
+        showError("your balance is too low to withdraw that amount")
+      return;
+
+      }
+     }
      bankDispatchContext({
         type: update,
-        amount,
+        amount:Number(amount),
         currency
         
     })
@@ -45,6 +73,7 @@ function Balance({header,bgcolor,description,update}){
      bgcolor={bgcolor}
      update={update}
      description={description}
+     status={status}
      body={show ?(   
            <>
         Balance: {currentBalance}<br/>

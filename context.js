@@ -3,8 +3,21 @@ const BankDispatchContext = React.createContext (null);
 
 function BankContextProvider({children}) {
     const initialData = {
+        
         currentAccount: null, 
-        accounts: {}
+        accounts: { 
+            "vera" : {
+            email: "tschanzvera@gmail.com",
+            name: "Vera",
+            password: "12345",
+            balance: 100
+        },
+        "eva": {
+            email: "eva@gmail.com",
+            name: "Eva",
+            password: "12345",
+            balance: 100
+        }}
     };
     const [bank, dispatch] = React.useReducer(
         bankReducer,
@@ -24,6 +37,7 @@ function BankContextProvider({children}) {
 var ACTION_CREATE_ACCOUNT = "ACTION_CREATE_ACCOUNT";
 var ACTION_DEPOSIT = "ACTION_DEPOSIT";
 var ACTION_WITHDRAW = "ACTION_WITHDRAW";
+var ACTION_LOGIN = "ACTION_LOGIN"; 
 
 function bankReducer(bank, action){
     switch (action.type) {
@@ -32,18 +46,15 @@ function bankReducer(bank, action){
         }
         
         case ACTION_DEPOSIT: {
-            console.log("money deposited");
-            return bank;
+         return changeBalance(bank,action,1);
         }
         
         case ACTION_WITHDRAW: {
-            console.log("money withdrawn");
-            return bank;
+            return changeBalance (bank,action,-1);
         }
 
         case ACTION_LOGIN: {
-            console.log("logged in");
-            return bank;
+            return individualLogin(bank,action);
         }
         default:{
             alert(action.type + " is not supported")
@@ -63,5 +74,47 @@ function createAccount(bank, action){
     console.log("account created");
     return newState;
 
+}
+
+
+
+function changeBalance (bank, action,sign) {
+    const amount = action.amount;
+
+    if (typeof amount !== 'number' || amount <= 0) {
+        console.error("Invalid withdrawal amount");
+        return bank;
+    }
+
+    const newState = { ...bank };
+
+    if (newState.currentAccount) {
+        // Update the balance of the current account
+        newState.accounts[newState.currentAccount].balance += amount*sign;
+        console.log(` New balance: ${newState.accounts[newState.currentAccount].balance}`);
+    } else {
+        console.error("No current account selected");
+    }
+
+    return newState;
+}
+
+function individualLogin(bank, action){
+    const password = action.password;
+    const currentAccount = bank.accounts[action.email];
+    if (!currentAccount){
+        return bank;
+    }
+    const newState ={...bank};
+    newState.currentAccount = action.email;
+    
+
+    console.log("login completed. Current account:", newState.currentAccount);
+    return newState;
+
+   
 
 }
+
+
+    
