@@ -6,9 +6,9 @@ function Balance({ header, bgcolor, description, update }) {
   const bankContext = React.useContext(BankContext);
   const bankDispatchContext = React.useContext(BankDispatchContext);
   const currentAccount = bankContext.accounts[bankContext.currentAccount];
-
+  const title =  update === ACTION_WITHDRAW ? "Withdraw" : "Deposit";
   if (!currentAccount) {
-    return <h4> you need to create an account or login</h4>;
+    return <h4> YOU NEED TO CREATE AN ACCOUNT OR LOGIN</h4>;
   }
   const currentBalance = currentAccount.balance;
 
@@ -36,10 +36,13 @@ function Balance({ header, bgcolor, description, update }) {
   //}
   function handle() {
     if (!validate(amount, "amount")) return;
-    const numericAmount = Number(amount);
-    if (isNaN(numericAmount)|| numericAmount <= 0) {
+    let numericAmount = Number(amount);
+    if (isNaN(numericAmount) || numericAmount <= 0) {
       showError("Error: Amount must be a valid positive number");
       return;
+    }
+    if (currency==="EUR"){
+      numericAmount*= 0.96;
     }
     if (update === ACTION_WITHDRAW) {
       if (currentBalance < Number(amount)) {
@@ -47,33 +50,50 @@ function Balance({ header, bgcolor, description, update }) {
         return;
       }
     }
-   
+
     bankDispatchContext({
       type: update,
-      amount: Number(amount),
+      amount: numericAmount,
       currency,
     });
     //   ctx.users.push({email,currency,balance:100});
+    let updatedBalance;
+    if (update === ACTION_WITHDRAW){
+     updatedBalance = currentBalance - numericAmount;
+    }
+    else{
+      updatedBalance = currentBalance + numericAmount;
+    }
+
+
+  
+  setStatus(`${title} successful!  Current balance: CHF ${updatedBalance}`);
+
+
 
     setShow(false);
   }
   function clearForm() {
     setAmount("");
-    setCurrency("");
+   // setCurrency("");
     setShow(true);
+    setStatus("");
+  }
+
+  function disableButton() {
+    return !amount;
   }
 
   return (
     <Card
       header={header}
       bgcolor={bgcolor}
-      update={update}
       description={description}
       status={status}
       body={
         show ? (
           <>
-            Balance: {currentBalance}
+            Balance: CHF {currentBalance}
             <br />
             Amount
             <br />
@@ -99,15 +119,20 @@ function Balance({ header, bgcolor, description, update }) {
               <option value="EUR">EUR</option>
             </select>
             <br />
-            <button type="submit" className="btn btn-light" onClick={handle}>
-              show current balance
+            <button
+              type="submit"
+              className="btn btn-light"
+              onClick={handle}
+              disabled={disableButton()}
+            >
+               {title}
             </button>
           </>
         ) : (
           <>
             <h5>Current balance</h5>
             <button type="submit" className="btn btn-light" onClick={clearForm}>
-              print receipt
+              {title} again
             </button>
           </>
         )

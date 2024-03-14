@@ -6,15 +6,15 @@ function BankContextProvider({children}) {
         
         currentAccount: null, 
         accounts: { 
-            "vera" : {
-            email: "tschanzvera@gmail.com",
-            name: "Vera",
+            "lila@gmail.com" : {
+            email: "lila@gmail.com",
+            name: "Lila",
             password: "12345",
             balance: 100
         },
-        "eva": {
-            email: "eva@gmail.com",
-            name: "Eva",
+        "ben@gmail.com": {
+            email: "ben@gmail.com",
+            name: "Ben",
             password: "12345",
             balance: 100
         }}

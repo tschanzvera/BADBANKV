@@ -1,3 +1,4 @@
+
 const getCurrentPage = () => {
   const hash = window.location.hash;
   switch (hash) {
@@ -31,7 +32,7 @@ window.location.hash= newPage;
 console.log (currentPage)
     return(
         <>
-           <nav className="navbar navbar-expand-lg navbar-light bg-light">
+           <nav className="navbar navbar-expand-lg navbar-lg "style={{ backgroundColor: "rgb(177, 172, 164)" }}>
      {/* <a className="navbar-brand" href="#">BadBank</a>*/}
    
       <a className={`navbar-brand ${currentPage === "#" ? 'active' : ''}` } onClick={()=>changePage("#")} data-bs-toggle="tooltip"  data-bs-title="Home Page">

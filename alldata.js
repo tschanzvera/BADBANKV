@@ -9,7 +9,7 @@ function AllData() {
         txtcolor="white"
         body ={ <>
           <h2>All Data</h2>
-          <p>This is information about all accounts:</p>
+          <p>All account information:</p>
           <ul>
               {Object.values(accounts).map((account) => (
                   <li key={account.email}>
