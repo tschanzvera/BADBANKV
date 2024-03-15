@@ -1,9 +1,9 @@
-# 
-## Exercise on toDo List
+# BADBANKV
+## Exercise on a BadBank Application
 
 ## Description
 
-This is an exercise I had to do for my MITxPRO course. I had to make a toDo list with seperate files following instructions and then add some style to the list. I also added a navigation bar with a dropdown for the regular weekly todos.
+This is an exercise I had to do for my MITxPRO course. I had to make a BadBank Application using react.
 
 ## How to run
 
@@ -14,7 +14,7 @@ Load the URL in th browser
 
 ## Roadmap of future improvements 
 
-I would like to add more style and a button that would make the item that I add either red or blue depending on its importance.
+I would like to add more style and maybe use different validation on some of the pages.
 
 ## support
 
