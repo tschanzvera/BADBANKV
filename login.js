@@ -46,6 +46,11 @@ function Login() {
     setShow(true);
   }
 
+  function disableButton() {
+    return  !email && !password;
+  }
+
+
   return (
     <Card
       bgcolor="danger"
@@ -79,6 +84,7 @@ function Login() {
               type="submit"
               className="btn btn-light"
               onClick={handle}
+              disabled={disableButton()}
             >
               Login
             </button>
