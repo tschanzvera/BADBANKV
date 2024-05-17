@@ -6,22 +6,9 @@ function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   // const ctx = React.useContext(UserContext);
+  const {validate,showError} = Validater(setStatus);
 
 
-  function showError(error){
-    setStatus(error);
-    setTimeout(() => setStatus(''),3000);
-
-  }
-
-  function validate(field, label) {
-    if (!field) {
-      setStatus("Error: " + label);
-      setTimeout(() => setStatus(""), 3000);
-      return false;
-    }
-    return true;
-  }
   function handle() {
     console.log(email, password);
     if (!validate(email, "email")) return;

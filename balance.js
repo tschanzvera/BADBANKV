@@ -11,29 +11,9 @@ function Balance({ header, bgcolor, description, update }) {
     return <h4> YOU NEED TO CREATE AN ACCOUNT OR LOGIN</h4>;
   }
   const currentBalance = currentAccount.balance;
+  const {validate,showError} = Validater(setStatus);
 
-  function showError(error) {
-    setStatus(error);
-    setTimeout(() => setStatus(""), 3000);
-  }
-
-  function validate(field, label) {
-    if (!field) {
-      setStatus("Error: " + label);
-      setTimeout(() => setStatus(""), 3000);
-      return false;
-    }
-    return true;
-  }
-  //  const numericAmount = Number(field);
-  //  if (isNaN(numericAmount)) {
-  //    setStatus("Error: " + label + " must be a valid number");
-  //    setTimeout(() => setStatus(""), 3000);
-  //    return false;
-  //  }
-
-  //  return true;
-  //}
+  
   function handle() {
     if (!validate(amount, "amount")) return;
     let numericAmount = Number(amount);

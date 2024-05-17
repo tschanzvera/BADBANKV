@@ -7,20 +7,8 @@ function CreateAccount() {
   //const ctx = React.useContext(UserContext);
   const bankContext = React.useContext(BankContext);
   const bankDispatchContext = React.useContext(BankDispatchContext);
+ const {validate,showError} = Validater(setStatus);
 
-  // function showError(error) {
-  //   setStatus(error);
-  //   setTimeout(() => setStatus(""), 3000);
-  // }
-
-  // function validate(field, label) {
-  //   if (!field) {
-  //     showError("Error: " + label);
-
-  //     return false;
-  //   }
-  //   return true;
-  // }
   function handleCreate() {
     console.log(name, email, password);
     if (!validate(name, "name")) return;

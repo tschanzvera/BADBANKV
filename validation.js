@@ -1,13 +1,17 @@
-function validate(field, label) {
-  if (!field) {
-    showError("Error: " + label);
+function Validater(setStatus) {
+  
+  function validate(field, label) {
+    if (!field) {
+      showError("Error: " + label);
 
-    return false;
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 
-function showError(error) {
-  setStatus(error);
-  setTimeout(() => setStatus(""), 3000);
+  function showError(error) {
+    setStatus(error);
+    setTimeout(() => setStatus(""), 3000);
+  }
+  return {validate, showError};
 }
