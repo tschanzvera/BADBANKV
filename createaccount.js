@@ -8,19 +8,19 @@ function CreateAccount() {
   const bankContext = React.useContext(BankContext);
   const bankDispatchContext = React.useContext(BankDispatchContext);
 
-  function showError(error) {
-    setStatus(error);
-    setTimeout(() => setStatus(""), 3000);
-  }
+  // function showError(error) {
+  //   setStatus(error);
+  //   setTimeout(() => setStatus(""), 3000);
+  // }
 
-  function validate(field, label) {
-    if (!field) {
-      showError("Error: " + label);
+  // function validate(field, label) {
+  //   if (!field) {
+  //     showError("Error: " + label);
 
-      return false;
-    }
-    return true;
-  }
+  //     return false;
+  //   }
+  //   return true;
+  // }
   function handleCreate() {
     console.log(name, email, password);
     if (!validate(name, "name")) return;
