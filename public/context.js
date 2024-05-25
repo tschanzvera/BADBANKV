@@ -46,6 +46,13 @@ function bankReducer(bank, action){
         }
         
         case ACTION_DEPOSIT: {
+            axios.put('http://localhost:3000/deposit?amount='+action.amount)
+            .then(response => {
+              console.log(response.data); // Handle the response data
+            })
+            .catch(error => {
+              console.error('There was an error!', error); // Handle the error
+            });
          return changeBalance(bank,action,1);
         }
         
@@ -78,26 +85,26 @@ function createAccount(bank, action){
 
 
 
-function changeBalance (bank, action,sign) {
-    const amount = action.amount;
+// function changeBalance (bank, action,sign) {
+//     const amount = action.amount;
 
-    if (typeof amount !== 'number' || amount <= 0) {
-        console.error("Invalid withdrawal amount");
-        return bank;
-    }
+//     if (typeof amount !== 'number' || amount <= 0) {
+//         console.error("Invalid withdrawal amount");
+//         return bank;
+//     }
 
-    const newState = { ...bank };
+//     const newState = { ...bank };
 
-    if (newState.currentAccount) {
-        // Update the balance of the current account
-        newState.accounts[newState.currentAccount].balance += amount*sign;
-        console.log(` New balance: ${newState.accounts[newState.currentAccount].balance}`);
-    } else {
-        console.error("No current account selected");
-    }
+//     if (newState.currentAccount) {
+//         // Update the balance of the current account
+//         newState.accounts[newState.currentAccount].balance += amount*sign;
+//         console.log(` New balance: ${newState.accounts[newState.currentAccount].balance}`);
+//     } else {
+//         console.error("No current account selected");
+//     }
 
-    return newState;
-}
+//     return newState;
+// }
 
 function individualLogin(bank, action){
     const password = action.password;
