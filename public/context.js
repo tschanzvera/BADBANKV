@@ -1,28 +1,22 @@
 const BankContext = React.createContext(null);
 const BankDispatchContext = React.createContext (null);
-
+var privateDispatcher;
 function BankContextProvider({children}) {
     const initialData = {
         
-        currentAccount: null, 
-        accounts: { 
-            "lila@gmail.com" : {
-            email: "lila@gmail.com",
-            name: "Lila",
-            password: "12345",
-            balance: 100
-        },
-        "ben@gmail.com": {
-            email: "ben@gmail.com",
-            name: "Ben",
-            password: "12345",
-            balance: 100
-        }}
+        currentAccount: {
+            name:null,
+            email:null,
+            balance: null
+        }
+      
+     
     };
     const [bank, dispatch] = React.useReducer(
         bankReducer,
         initialData
       );
+      privateDispatcher = dispatch;
       return (
         <BankContext.Provider value={bank}>
           <BankDispatchContext.Provider value={dispatch}>
@@ -38,6 +32,7 @@ var ACTION_CREATE_ACCOUNT = "ACTION_CREATE_ACCOUNT";
 var ACTION_DEPOSIT = "ACTION_DEPOSIT";
 var ACTION_WITHDRAW = "ACTION_WITHDRAW";
 var ACTION_LOGIN = "ACTION_LOGIN"; 
+var ACTION_UPDATESTATE= "UPDATE_STATE";
 
 function bankReducer(bank, action){
     switch (action.type) {
@@ -49,6 +44,11 @@ function bankReducer(bank, action){
             axios.put('http://localhost:3000/deposit?amount='+action.amount)
             .then(response => {
               console.log(response.data); // Handle the response data
+              privateDispatcher({
+                type:ACTION_UPDATESTATE,
+                amount:response.data
+              })
+
             })
             .catch(error => {
               console.error('There was an error!', error); // Handle the error
@@ -62,6 +62,11 @@ function bankReducer(bank, action){
 
         case ACTION_LOGIN: {
             return individualLogin(bank,action);
+        }
+        case ACTION_UPDATESTATE:{
+            const newState ={...bank};
+            newState.currentAccount.balance= action.amount
+            return newState;
         }
         default:{
             alert(action.type + " is not supported")

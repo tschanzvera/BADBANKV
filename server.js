@@ -2,20 +2,7 @@ var express = require('express');
 var app = express();
 var cors = require('cors');
 var database = require('./database.js');
-const bank = {
-    accounts: {
-        "lila@gmail.com": {
-            email: "lila@gmail.com",
-            name: "Lila",
-            balance: 100
-        },
-        "ben@gmail.com": {
-            email: "ben@gmail.com",
-            name: "Ben",
-            balance: 100
-        }
-    }
-}
+var admin = require('./admin.js');
 
 // used to serve static files from public directory
 app.use(express.static('public'));
@@ -28,7 +15,8 @@ app.get("/health", (req, res) => {
 })
 
 app.put("/deposit", (req, res) => {
-    changeBalance(req.query.amount, 1)
+    checkAuthentication(req, res)
+        .then(token => changeBalance(req.query.amount, 1, token.email))
     res.send("money has been deposited")
 })
 
@@ -41,30 +29,63 @@ app.put("/withdraw", (req, res) => {
 
 
 
-function changeBalance( amount, sign) {
-    
+function changeBalance(amount, sign, email, response) {
+
 
     if (typeof amount !== 'number' || amount <= 0) {
-        console.error("Invalid withdrawal amount");
-        return bank;
+        console.error("Invalid amount");
+        response.status(400).send("invalid amount");
     }
 
-    const newState = { ...bank };
+    database.getAccount(email)
+        .then(currentAccount => {
 
-    if (newState.currentAccount) {
-        // Update the balance of the current account
-        newState.accounts[newState.currentAccount].balance += amount * sign;
-        console.log(` New balance: ${newState.accounts[newState.currentAccount].balance}`);
-    } else {
-        console.error("No current account selected");
-    }
+            if (currentAccount) {
+                // Update the balance of the current account
+                currentAccount.balance = currentAccount.balance + amount * sign;
+                database.updateAccount(currentAccount)
+                    .then(() => {
+                        console.log(` New balance: ${currentAccount.balance}`);
+                        response.send(currentAccount.balance);
 
-    return newState;
+                    }).catch(() =>{
+                        response.status(500).send();
+
+                    })
+
+            } else {
+                console.error("No current account selected");
+                response.status(400).send("no such account");
+            }
+        })
+
 }
 
+function checkAuthentication(req, res) {
 
 
+    // read token from header
+    const idToken = req.headers.authorization
+    console.log('header:', idToken);
 
+    if (!idToken) {
+        res.status(401).send();
+        return
+    }
+    //check, did they pass us the token?
+    //if not, do a 401 error
+    //check if verify id token was successful
+    //if not, do 401
+
+    //verify token, is this token valid?
+    return admin.auth().verifyIdToken(idToken)
+        .catch(function (error) {
+            console.log('error:', error);
+            res.status(401).send("Token invalid!");
+
+        });
+
+}
 
 
 
