@@ -25,6 +25,29 @@ app.put("/withdraw", (req, res) => {
     res.send("money has been withdrawn")
 })
 
+app.post("/login", (req,res) => {
+    const email = req.body.email
+    const password= req.body.password
+
+    login(email,password,res)
+
+    
+})
+
+function login(email,password,res){
+    firebase.auth().signInWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    // Signed in
+    var user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    res.status(errorCode).send(errorMessage)
+  });
+
+}
 
 
 

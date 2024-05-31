@@ -46,7 +46,7 @@ function bankReducer(bank, action){
               console.log(response.data); // Handle the response data
               privateDispatcher({
                 type:ACTION_UPDATESTATE,
-                amount:response.data
+                balance:response.data
               })
 
             })
@@ -65,7 +65,11 @@ function bankReducer(bank, action){
         }
         case ACTION_UPDATESTATE:{
             const newState ={...bank};
-            newState.currentAccount.balance= action.amount
+            newState.currentAccount={
+                ...newState.currentAccount,
+                ...action
+
+            }
             return newState;
         }
         default:{
@@ -112,17 +116,20 @@ function createAccount(bank, action){
 // }
 
 function individualLogin(bank, action){
-    const password = action.password;
-    const currentAccount = bank.accounts[action.email];
-    if (!currentAccount){
-        return bank;
-    }
-    const newState ={...bank};
-    newState.currentAccount = action.email;
+    axios.post ('http://localhost:3000/login',{email:action.email, password:action.password})
+    .then(response=>{
+        console.log(response.data); // Handle the response data
+        privateDispatcher({
+          type:ACTION_UPDATESTATE,
+          ...response.data
+        })
     
+    })
+    .catch(error => {
+        console.error('There was an error!', error); // Handle the error
+      });
 
-    console.log("login completed. Current account:", newState.currentAccount);
-    return newState;
+    return bank
 
    
 
