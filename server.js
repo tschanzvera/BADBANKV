@@ -14,38 +14,40 @@ app.get("/health", (req, res) => {
 
 })
 
-app.put("/deposit", (req, res) => {
+app.put("/account", (req, res) => {
+    let sign;
+    if (req.query.action === "deposit")
+        sign = 1;
+    else
+        sign = -1;
     checkAuthentication(req, res)
-        .then(token => changeBalance(req.query.amount, 1, token.email))
-    res.send("money has been deposited")
+        .then((token) => changeBalance(req.query.amount, sign, token.email))
+
 })
 
-app.put("/withdraw", (req, res) => {
-    changeBalance(req.query.amount, -1)
-    res.send("money has been withdrawn")
-})
 
-app.post("/login", (req,res) => {
+app.post("/login", (req, res) => {
     const email = req.body.email
-    const password= req.body.password
+    const password = req.body.password
 
-    login(email,password,res)
+    login(email, password, res)
 
-    
+
 })
 
-function login(email,password,res){
-    firebase.auth().signInWithEmailAndPassword(email, password)
-  .then((userCredential) => {
-    // Signed in
-    var user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    res.status(errorCode).send(errorMessage)
-  });
+function login(email, password, res) {
+    admin.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in
+            const token = userCredential.user.getIdToken();
+            database.getAccount(email)
+                .then((account) => res.send({ ...account, token }))
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            res.status(errorCode).send(errorMessage)
+        });
 
 }
 
@@ -71,7 +73,7 @@ function changeBalance(amount, sign, email, response) {
                         console.log(` New balance: ${currentAccount.balance}`);
                         response.send(currentAccount.balance);
 
-                    }).catch(() =>{
+                    }).catch(() => {
                         response.status(500).send();
 
                     })
