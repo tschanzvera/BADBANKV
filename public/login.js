@@ -13,7 +13,7 @@ function Login() {
     console.log(email, password);
     if (!validate(email, "email")) return;
     if (!validate(password, "password")) return;
-    if (password.length < 8){
+    if (password.length < 5){
       showError("password needs to be at least 8 characters")
       return;
     }

@@ -67,7 +67,7 @@ console.log (currentPage)
                 title="View all data">AllData</a>
           </li> 
           <li className="nav-item">
-            {bankContext.currentAccount}
+            {bankContext.currentAccount.name}
           </li>             
         </ul>
       </div>

@@ -4,6 +4,10 @@ var cors = require('cors');
 var database = require('./database.js');
 var admin = require('./admin.js');
 
+
+
+app.use(express.json()) 
+
 // used to serve static files from public directory
 app.use(express.static('public'));
 app.use(cors())
@@ -27,6 +31,7 @@ app.put("/account", (req, res) => {
 
 
 app.post("/login", (req, res) => {
+   
     const email = req.body.email
     const password = req.body.password
 

@@ -5,7 +5,7 @@ function Balance({ header, bgcolor, description, update }) {
   const [currency, setCurrency] = React.useState("EUR");
   const bankContext = React.useContext(BankContext);
   const bankDispatchContext = React.useContext(BankDispatchContext);
-  const currentAccount = bankContext.accounts[bankContext.currentAccount];
+  const currentAccount = bankContext.currentAccount;
   const title =  update === ACTION_WITHDRAW ? "Withdraw" : "Deposit";
   if (!currentAccount) {
     return <h4> YOU NEED TO CREATE AN ACCOUNT OR LOGIN</h4>;
