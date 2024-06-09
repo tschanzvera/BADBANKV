@@ -83,17 +83,18 @@ function createAccount(bank, action) {
 
 
 function changeBalance(bank, action, amount) {
-    axios.put('http://localhost:3000/account?action=' + action + '&amount=' + amount)
+    axios.put('http://localhost:3000/account?action=' + action + '&amount=' + amount+ '&email=' + bank.currentAccount.email)
         .then(response => {
             console.log(response.data); // Handle the response data
             privateDispatcher({
                 type: ACTION_UPDATESTATE,
-                balance: response.data
+                balance: response.data.balance
 
             })
         })
         .catch(error => {
-            console.error('There was an error!', error); // Handle the error
+            console.error('There was an error!', error); 
+            alert("there is an error")// Handle the error
         });
     return bank
 }
@@ -109,7 +110,8 @@ function individualLogin(bank, action) {
 
         })
         .catch(error => {
-            console.error('There was an error!', error); // Handle the error
+            console.error('There was an error!', error);
+            alert("there was an error"); // Handle the error
         });
 
     return bank

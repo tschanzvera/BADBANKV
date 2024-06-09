@@ -25,7 +25,7 @@ const bank = {
     }
 }
 
-function getAccount(email){
+ function getAccount(email){
     return new Promise((resolve,reject)=>{resolve(bank.accounts[email])})
 
     
@@ -36,4 +36,8 @@ function updateAccount(updatedAccount){
     return new Promise((resolve,reject)=>{resolve()})
 
 
+}
+
+module.exports={
+    getAccount, updateAccount
 }

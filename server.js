@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var cors = require('cors');
 var database = require('./database.js');
-var admin = require('./admin.js');
+//var admin = require('./admin.js');
 
 
 
@@ -24,8 +24,8 @@ app.put("/account", (req, res) => {
         sign = 1;
     else
         sign = -1;
-    checkAuthentication(req, res)
-        .then((token) => changeBalance(req.query.amount, sign, token.email))
+     checkAuthentication(req, res)
+       .then((token) => changeBalance(Number(req.query.amount), sign, req.query.email, res))
 
 })
 
@@ -34,8 +34,15 @@ app.post("/login", (req, res) => {
    
     const email = req.body.email
     const password = req.body.password
+    database.getAccount(email)
+    .then(currentAccount=>{
+        if(!currentAccount){
+            res.status(401).send("authentication failed")
+        }else{
+        res.send({...currentAccount,token:{email}})}
+    })
 
-    login(email, password, res)
+    // login(email, password, res)
 
 
 })
@@ -64,7 +71,8 @@ function changeBalance(amount, sign, email, response) {
 
     if (typeof amount !== 'number' || amount <= 0) {
         console.error("Invalid amount");
-        response.status(400).send("invalid amount");
+        response.status(400).send("invalid amount:"+ amount);
+        return
     }
 
     database.getAccount(email)
@@ -76,7 +84,7 @@ function changeBalance(amount, sign, email, response) {
                 database.updateAccount(currentAccount)
                     .then(() => {
                         console.log(` New balance: ${currentAccount.balance}`);
-                        response.send(currentAccount.balance);
+                        response.send(currentAccount);
 
                     }).catch(() => {
                         response.status(500).send();
@@ -92,6 +100,7 @@ function changeBalance(amount, sign, email, response) {
 }
 
 function checkAuthentication(req, res) {
+    return Promise.resolve();
 
 
     // read token from header

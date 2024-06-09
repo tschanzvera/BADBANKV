@@ -7,7 +7,7 @@ function Balance({ header, bgcolor, description, update }) {
   const bankDispatchContext = React.useContext(BankDispatchContext);
   const currentAccount = bankContext.currentAccount;
   const title =  update === ACTION_WITHDRAW ? "Withdraw" : "Deposit";
-  if (!currentAccount) {
+  if (!currentAccount.email) {
     return <h4> YOU NEED TO CREATE AN ACCOUNT OR LOGIN</h4>;
   }
   const currentBalance = currentAccount.balance;
