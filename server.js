@@ -39,7 +39,7 @@ app.post("/login", (req, res) => {
         if(!currentAccount){
             res.status(401).send("authentication failed")
         }else{
-        res.send({...currentAccount,token:{email}})}
+        res.send(currentAccount)}
     })
 
     // login(email, password, res)
