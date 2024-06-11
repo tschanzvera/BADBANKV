@@ -3,10 +3,13 @@ var app = express();
 var cors = require('cors');
 var database = require('./database.js');
 //var admin = require('./admin.js');
+const session = "session"
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+const token = Math.floor(Math.random() * 10000)
 
 
-
-app.use(express.json()) 
+app.use(express.json())
 
 // used to serve static files from public directory
 app.use(express.static('public'));
@@ -24,43 +27,52 @@ app.put("/account", (req, res) => {
         sign = 1;
     else
         sign = -1;
-     checkAuthentication(req, res)
-       .then((token) => changeBalance(Number(req.query.amount), sign, req.query.email, res))
+    checkAuthentication(req, res)
+        .then((token) => changeBalance(Number(req.query.amount), sign, req.query.email, res))
 
 })
 
 
 app.post("/login", (req, res) => {
-   
+
     const email = req.body.email
     const password = req.body.password
     database.getAccount(email)
-    .then(currentAccount=>{
-        if(!currentAccount){
-            res.status(401).send("authentication failed")
-        }else{
-        res.send(currentAccount)}
-    })
+        .then(currentAccount => {
+
+            if (!currentAccount) {
+                res.status(401).send("authentication failed")
+            } else {
+                return login(currentAccount, password, res)
+            }
+        })
 
     // login(email, password, res)
 
 
 })
 
-function login(email, password, res) {
-    admin.auth().signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            // Signed in
-            const token = userCredential.user.getIdToken();
-            database.getAccount(email)
-                .then((account) => res.send({ ...account, token }))
-        })
-        .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            res.status(errorCode).send(errorMessage)
-        });
+function login(currentAccount, password, res) {
+    database.hashPassword(password).then(hash => {
+        if (hash === currentAccount.password) {
+            const accessToken = JSON.stringify({
+                email: currentAccount.email,
+                token: token
 
+            })
+            res.cookie(session, accessToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: "Strict",
+                maxAge: 15 * 60 * 1000,
+                path: "/"
+            })
+            res.send(currentAccount)
+        } else {
+            res.status(401).send("authentication failed")
+        }
+
+    })
 }
 
 
@@ -71,7 +83,7 @@ function changeBalance(amount, sign, email, response) {
 
     if (typeof amount !== 'number' || amount <= 0) {
         console.error("Invalid amount");
-        response.status(400).send("invalid amount:"+ amount);
+        response.status(400).send("invalid amount:" + amount);
         return
     }
 
@@ -100,8 +112,17 @@ function changeBalance(amount, sign, email, response) {
 }
 
 function checkAuthentication(req, res) {
-    return Promise.resolve();
+    const accessToken = req.cookies[session]
+    const { email, userToken } = JSON.parse(accessToken)
+    if (userToken === token) {
 
+        return Promise.resolve(email);
+
+    } else {
+        res.status(401).send();
+
+        return Promise.reject();
+    }
 
     // read token from header
     const idToken = req.headers.authorization

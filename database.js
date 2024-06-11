@@ -10,6 +10,7 @@
 //     db = client.db('myproject');
 // });
 let account = null;
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/badbank')
     .then(() => {
@@ -18,22 +19,27 @@ mongoose.connect('mongodb://127.0.0.1:27017/badbank')
         const accountsSchema = new mongoose.Schema({
             name: String,
             email: String,
-            balance: Number
+            balance: Number,
+            password:String
         });
         account = mongoose.model('accounts', accountsSchema);
-        const lilasAccount = new account({
-            email: "lila@gmail.com",
-            name: "Lila",
-            balance: 100
-        });
-        lilasAccount.save().then(() => { console.log("lila saved") })
+        hashPassword("secret").then((hash) => {
+            const lilasAccount = new account({
+                email: "lila@gmail.com",
+                name: "Lila",
+                balance: 100,
+                password:hash
+            });
+            lilasAccount.save().then(() => { console.log("lila saved") })
 
-        const bensAccount = new account({
-            email: "ben@gmail.com",
-            name: "ben",
-            balance: 100
+            const bensAccount = new account({
+                email: "ben@gmail.com",
+                name: "ben",
+                balance: 100,
+                password: hash
+            });
+            bensAccount.save().then(() => { console.log("ben saved") })
         });
-        bensAccount.save().then(() => { console.log("ben saved") })
 
 
 
@@ -47,17 +53,29 @@ mongoose.connect('mongodb://127.0.0.1:27017/badbank')
 function getAccount(email) {
     // return new Promise((resolve, reject) => { resolve(bank.accounts[email]) })
 
-  return  account.findOne({ email:email}).then();
+    return account.findOne({ email: email }).then();
 
-    
+
 }
 
 function updateAccount(updatedAccount) {
-  return account.updateOne({email:updatedAccount.email}, updatedAccount).exec().then(()=>updateAccount);
+    return account.updateOne({ email: updatedAccount.email }, updatedAccount).exec().then(() => updateAccount);
 
 
 }
 
+
+
+function hashPassword(password) {
+
+    const saltRounds = 10; // Number of salt rounds
+    return bcrypt.hash(password, saltRounds);
+
+};
+
+
+
+
 module.exports = {
-    getAccount, updateAccount
+    getAccount, updateAccount, hashPassword
 }
