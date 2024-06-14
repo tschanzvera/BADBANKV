@@ -52,6 +52,32 @@ app.post("/login", (req, res) => {
 
 })
 
+app.post("/create-account", (req, res) => {
+    const name = req.body.password
+    const email = req.body.email
+    const password = req.body.password
+    database.createAccount(name,email,password)
+        .then(createdAccount => {
+
+            if (!createdAccount) {
+                res.status(409).send("account creation failed")
+            } else {
+                return login(createdAccount, password, res)
+            }
+        })
+
+   
+
+})
+
+
+
+
+
+
+
+
+
 function login(currentAccount, password, res) {
     database.hashPassword(password).then(hash => {
         if (hash === currentAccount.password) {

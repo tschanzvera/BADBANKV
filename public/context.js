@@ -67,16 +67,22 @@ function bankReducer(bank, action) {
 }
 
 function createAccount(bank, action) {
-    const account = action.account;
-    account.balance = 0;
-    const newState = { ...bank };
-    newState.currentAccount = account.email;
-    newState.accounts = { ...bank.accounts };
-    newState.accounts[account.email] = account;
+    axios.post('http://localhost:3000/create-account', { name: action.name, email: action.email, password: action.password })
+    .then(response => {
+        console.log(response.data); // Handle the response data
+        privateDispatcher({
+            type: ACTION_UPDATESTATE,
+            ...response.data
+        })
 
+    })
+    .catch(error => {
+        console.error('There was an error!', error);
+        alert("there was an error"); // Handle the error
+    });
 
-    console.log("account created");
-    return newState;
+return bank
+ 
 
 }
 
@@ -119,6 +125,7 @@ function individualLogin(bank, action) {
 
 
 }
+
 
 
 

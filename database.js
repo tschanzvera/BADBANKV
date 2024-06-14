@@ -20,7 +20,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/badbank')
             name: String,
             email: String,
             balance: Number,
-            password:String
+            password: String
         });
         account = mongoose.model('accounts', accountsSchema);
         hashPassword("secret").then((hash) => {
@@ -28,7 +28,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/badbank')
                 email: "lila@gmail.com",
                 name: "Lila",
                 balance: 100,
-                password:hash
+                password: hash
             });
             lilasAccount.save().then(() => { console.log("lila saved") })
 
@@ -46,6 +46,21 @@ mongoose.connect('mongodb://127.0.0.1:27017/badbank')
     })
 
     .catch(err => console.log(err));
+
+
+function createAccount(name, email, password) {
+    return hashPassword(password).then((hash) => {
+        const newAccount = new account({
+            email: email,
+            name: name,
+            balance: 0,
+            password: hash
+        });
+        return newAccount.save().then(() => { console.log("account saved") })
+    });
+
+
+}
 
 
 
@@ -77,5 +92,5 @@ function hashPassword(password) {
 
 
 module.exports = {
-    getAccount, updateAccount, hashPassword
+    getAccount, updateAccount, hashPassword, createAccount
 }
