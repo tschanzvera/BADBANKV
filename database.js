@@ -20,7 +20,10 @@ mongoose.connect('mongodb+srv://tschanzvera:'+password+'@cluster0.a5s58m3.mongod
         const accountsSchema = new mongoose.Schema({
             name: String,
             email: String,
-            balance: Number,
+            balance: {
+                checking: Number,
+                savings: Number
+            },
             password: String
         });
         account = mongoose.model('accounts', accountsSchema);
@@ -54,7 +57,10 @@ function createAccount(name, email, password) {
         const newAccount = new account({
             email: email,
             name: name,
-            balance: 0,
+            balance: {
+                checking: 0,
+                savings: 0
+            },
             password: hash
         });
         return newAccount.save().then((createdAccount) => {

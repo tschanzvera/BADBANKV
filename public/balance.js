@@ -3,6 +3,7 @@ function Balance({ header, bgcolor, description, update }) {
   const [status, setStatus] = React.useState("");
   const [amount, setAmount] = React.useState("");
   const [currency, setCurrency] = React.useState("EUR");
+  const [account, setAccount] = React.useState("savings");
   const bankContext = React.useContext(BankContext);
   const bankDispatchContext = React.useContext(BankDispatchContext);
   const currentAccount = bankContext.currentAccount;
@@ -10,7 +11,7 @@ function Balance({ header, bgcolor, description, update }) {
   if (!currentAccount.email) {
     return <h4> YOU NEED TO CREATE AN ACCOUNT OR LOGIN</h4>;
   }
-  const currentBalance = currentAccount.balance;
+  const currentBalance = currentAccount.balance[account];
   const {validate,showError} = Validater(setStatus);
 
   
@@ -35,6 +36,7 @@ function Balance({ header, bgcolor, description, update }) {
       type: update,
       amount: numericAmount,
       currency,
+      account
     });
     //   ctx.users.push({email,currency,balance:100});
     let updatedBalance;
@@ -85,6 +87,20 @@ function Balance({ header, bgcolor, description, update }) {
               value={amount}
               onChange={(e) => setAmount(e.currentTarget.value)}
             />
+             <br />
+            Choose account
+            <br />
+            <select
+              className="form-control"
+              id="account"
+              placeholder="Enter account"
+              value={account}
+              onChange={(e) => setAccount(e.currentTarget.value)}
+            >
+              <option value="savings">Savings</option>
+              <option value="checking">Checking</option>
+            </select>
+            <br />
             <br />
             Choose currency
             <br />

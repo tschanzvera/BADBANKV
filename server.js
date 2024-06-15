@@ -28,7 +28,7 @@ app.put("/account", (req, res) => {
     else
         sign = -1;
     checkAuthentication(req, res)
-        .then((token) => changeBalance(Number(req.query.amount), sign, req.query.email, res))
+        .then((token) => changeBalance(req.query.account,Number(req.query.amount), sign, req.query.email, res))
 
 })
 
@@ -104,7 +104,7 @@ function login(currentAccount, password, res) {
 
 
 
-function changeBalance(amount, sign, email, response) {
+function changeBalance(account, amount, sign, email, response) {
 
 
     if (typeof amount !== 'number' || amount <= 0) {
@@ -118,10 +118,10 @@ function changeBalance(amount, sign, email, response) {
 
             if (currentAccount) {
                 // Update the balance of the current account
-                currentAccount.balance = currentAccount.balance + amount * sign;
+                currentAccount.balance[account] = currentAccount.balance[account] + amount * sign;
                 database.updateAccount(currentAccount)
                     .then(() => {
-                        console.log(` New balance: ${currentAccount.balance}`);
+                        console.log(` New balance: ${currentAccount.balance[account]}`);
                         response.send(currentAccount);
 
                     }).catch(() => {

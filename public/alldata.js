@@ -1,7 +1,7 @@
 
 function AllData() {
   const bankContext = React.useContext(BankContext)
-   const { accounts } = bankContext;
+   const {currentAccount } = bankContext;
 
     return(
         <Card
@@ -11,9 +11,9 @@ function AllData() {
           <h2>All Data</h2>
           <p>All account information:</p>
           <ul>
-              {Object.values(accounts).map((account) => (
+              {Object.entries(currentAccount.balance).map(([account,amount]) => (
                   <li key={account.email}>
-                      {`Email: ${account.email}, Balance: ${account.balance}`}
+                      {`Account: ${account}, Balance: ${amount}`}
                   </li>
               ))}
           </ul>

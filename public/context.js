@@ -41,11 +41,13 @@ function bankReducer(bank, action) {
         }
 
         case ACTION_DEPOSIT: {
-            return changeBalance(bank, "deposit", action.amount);
+            const account = action.account
+            return changeBalance(bank, "deposit", action.amount, account);
         }
 
         case ACTION_WITHDRAW: {
-            return changeBalance(bank, "withdraw",action.amount);
+            const account = action.account
+            return changeBalance(bank, "withdraw", action.amount, account);
         }
 
         case ACTION_LOGIN: {
@@ -67,29 +69,30 @@ function bankReducer(bank, action) {
 }
 
 function createAccount(bank, action) {
-    axios.post('http://localhost:3000/create-account', action.account )
-    .then(response => {
-        console.log(response.data); // Handle the response data
-        privateDispatcher({
-            type: ACTION_UPDATESTATE,
-            ...response.data
+    axios.post('http://localhost:3000/create-account', action.account)
+        .then(response => {
+            console.log(response.data); // Handle the response data
+            privateDispatcher({
+                type: ACTION_UPDATESTATE,
+                ...response.data
+            })
+
         })
+        .catch(error => {
+            console.error('There was an error!', error);
+            alert("there was an error"); // Handle the error
+        });
 
-    })
-    .catch(error => {
-        console.error('There was an error!', error);
-        alert("there was an error"); // Handle the error
-    });
+    return bank
 
-return bank
- 
 
 }
 
 
 
-function changeBalance(bank, action, amount) {
-    axios.put('http://localhost:3000/account?action=' + action + '&amount=' + amount+ '&email=' + bank.currentAccount.email)
+function changeBalance(bank, action, amount, account) {
+
+    axios.put('http://localhost:3000/account?action=' + action + '&amount=' + amount + '&email=' + bank.currentAccount.email + '&account=' + account)
         .then(response => {
             console.log(response.data); // Handle the response data
             privateDispatcher({
@@ -99,7 +102,7 @@ function changeBalance(bank, action, amount) {
             })
         })
         .catch(error => {
-            console.error('There was an error!', error); 
+            console.error('There was an error!', error);
             alert("there is an error")// Handle the error
         });
     return bank
