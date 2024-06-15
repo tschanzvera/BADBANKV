@@ -12,7 +12,8 @@
 let account = null;
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/badbank')
+const password = process.env.mongopass;
+mongoose.connect('mongodb+srv://tschanzvera:'+password+'@cluster0.a5s58m3.mongodb.net/badbank?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => {
 
         console.log("successful connection")
@@ -23,23 +24,23 @@ mongoose.connect('mongodb://127.0.0.1:27017/badbank')
             password: String
         });
         account = mongoose.model('accounts', accountsSchema);
-        hashPassword("secret").then((hash) => {
-            const lilasAccount = new account({
-                email: "lila@gmail.com",
-                name: "Lila",
-                balance: 100,
-                password: hash
-            });
-            lilasAccount.save().then(() => { console.log("lila saved") })
+        // hashPassword("secret").then((hash) => {
+        //     const lilasAccount = new account({
+        //         email: "lila@gmail.com",
+        //         name: "Lila",
+        //         balance: 100,
+        //         password: hash
+        //     });
+        //     lilasAccount.save().then(() => { console.log("lila saved") })
 
-            const bensAccount = new account({
-                email: "ben@gmail.com",
-                name: "ben",
-                balance: 100,
-                password: hash
-            });
-            bensAccount.save().then(() => { console.log("ben saved") })
-        });
+        //     const bensAccount = new account({
+        //         email: "ben@gmail.com",
+        //         name: "ben",
+        //         balance: 100,
+        //         password: hash
+        //     });
+        //     bensAccount.save().then(() => { console.log("ben saved") })
+        // });
 
 
 

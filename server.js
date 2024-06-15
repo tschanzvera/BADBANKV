@@ -53,7 +53,7 @@ app.post("/login", (req, res) => {
 })
 
 app.post("/create-account", (req, res) => {
-    const name = req.body.password
+    const name = req.body.name
     const email = req.body.email
     const password = req.body.password
     database.createAccount(name,email,password)
