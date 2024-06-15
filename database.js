@@ -56,7 +56,10 @@ function createAccount(name, email, password) {
             balance: 0,
             password: hash
         });
-        return newAccount.save().then(() => { console.log("account saved") })
+        return newAccount.save().then((createdAccount) => {
+            console.log("account saved");
+            return createdAccount;
+        })
     });
 
 
@@ -88,9 +91,12 @@ function hashPassword(password) {
 
 };
 
+function comparePassword(password,account){
+    return bcrypt.compareSync(password,account.password)
+}
 
 
 
 module.exports = {
-    getAccount, updateAccount, hashPassword, createAccount
+    getAccount, updateAccount, hashPassword, createAccount, comparePassword
 }

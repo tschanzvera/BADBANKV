@@ -79,8 +79,8 @@ app.post("/create-account", (req, res) => {
 
 
 function login(currentAccount, password, res) {
-    database.hashPassword(password).then(hash => {
-        if (hash === currentAccount.password) {
+  
+        if (database.comparePassword(password,currentAccount)) {
             const accessToken = JSON.stringify({
                 email: currentAccount.email,
                 token: token
@@ -98,7 +98,7 @@ function login(currentAccount, password, res) {
             res.status(401).send("authentication failed")
         }
 
-    })
+    
 }
 
 
@@ -138,16 +138,16 @@ function changeBalance(amount, sign, email, response) {
 }
 
 function checkAuthentication(req, res) {
-    const accessToken = req.cookies[session]
-    const { email, userToken } = JSON.parse(accessToken)
-    if (userToken === token) {
+    const accessTokenString = req.cookies[session]
+    const accessToken = JSON.parse(accessTokenString)
+    if (accessToken.token === token) {
 
-        return Promise.resolve(email);
+        return Promise.resolve(accessToken.email);
 
     } else {
         res.status(401).send();
 
-        return Promise.reject();
+        return Promise.resolve();
     }
 
     // read token from header

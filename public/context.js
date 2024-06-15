@@ -67,7 +67,7 @@ function bankReducer(bank, action) {
 }
 
 function createAccount(bank, action) {
-    axios.post('http://localhost:3000/create-account', { name: action.name, email: action.email, password: action.password })
+    axios.post('http://localhost:3000/create-account', action.account )
     .then(response => {
         console.log(response.data); // Handle the response data
         privateDispatcher({
