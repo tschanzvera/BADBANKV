@@ -69,7 +69,7 @@ function bankReducer(bank, action) {
 }
 
 function createAccount(bank, action) {
-    axios.post('http://localhost:3000/create-account', action.account)
+    axios.post('/create-account', action.account)
         .then(response => {
             console.log(response.data); // Handle the response data
             privateDispatcher({
@@ -92,7 +92,7 @@ function createAccount(bank, action) {
 
 function changeBalance(bank, action, amount, account) {
 
-    axios.put('http://localhost:3000/account?action=' + action + '&amount=' + amount + '&email=' + bank.currentAccount.email + '&account=' + account)
+    axios.put('/account?action=' + action + '&amount=' + amount + '&email=' + bank.currentAccount.email + '&account=' + account)
         .then(response => {
             console.log(response.data); // Handle the response data
             privateDispatcher({
@@ -109,7 +109,7 @@ function changeBalance(bank, action, amount, account) {
 }
 
 function individualLogin(bank, action) {
-    axios.post('http://localhost:3000/login', { email: action.email, password: action.password })
+    axios.post('/login', { email: action.email, password: action.password })
         .then(response => {
             console.log(response.data); // Handle the response data
             privateDispatcher({
