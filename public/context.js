@@ -1,17 +1,18 @@
 const BankContext = React.createContext(null);
 const BankDispatchContext = React.createContext(null);
 var privateDispatcher;
+const initialData = {
+
+    currentAccount: {
+        name: null,
+        email: null,
+        accounts: null
+    }
+
+
+};
 function BankContextProvider({ children }) {
-    const initialData = {
 
-        currentAccount: {
-            name: null,
-            email: null,
-            balance: null
-        }
-
-
-    };
     const [bank, dispatch] = React.useReducer(
         bankReducer,
         initialData
@@ -32,6 +33,7 @@ var ACTION_CREATE_ACCOUNT = "ACTION_CREATE_ACCOUNT";
 var ACTION_DEPOSIT = "ACTION_DEPOSIT";
 var ACTION_WITHDRAW = "ACTION_WITHDRAW";
 var ACTION_LOGIN = "ACTION_LOGIN";
+var ACTION_LOGOUT = "ACTION_LOGOUT";
 var ACTION_UPDATESTATE = "UPDATE_STATE";
 
 function bankReducer(bank, action) {
@@ -52,6 +54,11 @@ function bankReducer(bank, action) {
 
         case ACTION_LOGIN: {
             return individualLogin(bank, action);
+        }
+
+        case ACTION_LOGOUT: {
+            logout()
+            return initialData;
         }
         case ACTION_UPDATESTATE: {
             const newState = { ...bank };
@@ -87,6 +94,7 @@ function createAccount(bank, action) {
 
 
 }
+
 
 
 
@@ -129,6 +137,13 @@ function individualLogin(bank, action) {
 
 }
 
+function logout() {
+    axios.post('/logout')
+        .then(response => {
+            location.reload();
+            console.log(response.data);
+        })
+}
 
 
 

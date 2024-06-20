@@ -14,7 +14,7 @@ function Login() {
     if (!validate(email, "email")) return;
     if (!validate(password, "password")) return;
     if (password.length < 5){
-      showError("password needs to be at least 8 characters")
+      showError("password needs to be at least 5 characters")
       return;
     }
     
@@ -79,9 +79,7 @@ function Login() {
         ) : (
           <>
             <h5>Success</h5>
-            <button type="submit" className="btn btn-light" onClick={clearForm}>
-              go back to login
-            </button>
+           
           </>
         )
       }

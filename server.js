@@ -52,6 +52,17 @@ app.post("/login", (req, res) => {
 
 })
 
+
+app.post("/logout", (req, res) => {
+
+
+logout(res)
+
+
+})
+
+
+
 app.post("/create-account", (req, res) => {
     const name = req.body.name
     const email = req.body.email
@@ -99,6 +110,11 @@ function login(currentAccount, password, res) {
         }
 
     
+}
+
+function logout(res){
+res.clearCookie(session)
+res.send("you are logged out")
 }
 
 
