@@ -80,7 +80,7 @@ function Navbar() {
                 title="View all data">  {bankContext.currentAccount.email}</a>
 
             </li>
-            {!bankContext.currentAccount.email && (<li className={"nav-item"}>
+            {bankContext.currentAccount.email && (<li className={"nav-item"}>
               <a className="nav-link" onClick={() => logout()} data-bs-toggle="tooltip"
                 title="View all data">Logout</a>
             </li>)}
