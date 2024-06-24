@@ -6,7 +6,7 @@ const initialData = {
     currentAccount: {
         name: null,
         email: null,
-        accounts: null
+        balance: {}
     }
 
 
